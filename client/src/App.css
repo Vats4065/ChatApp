@@ -1,0 +1,36 @@
+/* src/css/App.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.dark-theme {
+  background-color: #181818;
+  color: white;
+}
+
+.light-theme {
+  background-color: white;
+  color: black;
+}
+
+.chat-window {
+  border: 1px solid #ccc;
+  height: 400px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+/* Add media queries for responsive design */
+@media (max-width: 768px) {
+  .chat-window {
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chat-window {
+    height: 200px;
+  }
+}

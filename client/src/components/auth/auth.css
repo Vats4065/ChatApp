@@ -1,0 +1,23 @@
+/* src/components/auth/auth.css */
+.auth-container {
+  max-width: 400px; /* Limit the width of the container */
+  margin: auto; /* Center the container */
+  padding: 2rem; /* Add padding */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #ffffff; /* White background */
+}
+
+.auth-container h2 {
+  margin-bottom: 1.5rem; /* Space between title and form */
+}
+
+@media (max-width: 576px) {
+  .auth-container {
+    padding: 1rem; /* Less padding on smaller screens */
+  }
+
+  .auth-container h2 {
+    font-size: 1.5rem; /* Smaller font size on small screens */
+  }
+}

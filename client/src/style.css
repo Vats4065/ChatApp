@@ -1,0 +1,22 @@
+/* src/styles.css */
+body.light {
+  background-color: #f8f9fa;
+  color: #000;
+}
+
+body.dark {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: auto;
+}
+
+.chat-window {
+  height: 400px;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
