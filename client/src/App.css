@@ -49,3 +49,8 @@ body {
   color: inherit; /* Inherit text color */
   font-size: 1.2rem;
 }
+
+/* Add this to your CSS file (e.g., App.css) */
+.navbar .dropdown-item.disabled {
+  color: #ffffff;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { BsSun, BsMoon } from "react-icons/bs";
+import { BsSun, BsMoon, BsPerson } from "react-icons/bs"; // Import the profile icon
 import { useAuth } from "../utils/auth";
 import axios from "axios";
 
@@ -21,18 +21,15 @@ const Navigation = ({ theme, toggleTheme }) => {
     };
 
     getUserInfo();
-  }, []);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
       await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
-
-      // Proceed with logout
       logout();
       navigate("/login");
     } catch (error) {
       console.error("Error while logging out:", error);
-      // Optionally handle error (e.g., show a notification)
     }
   };
 
@@ -59,7 +56,25 @@ const Navigation = ({ theme, toggleTheme }) => {
               <Nav.Link as={Link} to="/users">
                 Users
               </Nav.Link>
-              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+              <NavDropdown title="Profile" id="basic-nav-dropdown">
+                {/* Display user details in the dropdown */}
+                <NavDropdown.Item disabled>
+                  <div className="d-flex align-items-center">
+                    <BsPerson className="me-2" />
+                    {user?.username} {/* Display the username or user name */}
+                  </div>
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/profile">
+                  View Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/settings">
+                  Settings
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={handleLogout}>
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
               <Nav.Link
                 onClick={toggleTheme}
                 data-bs-toggle="tooltip"
