@@ -23,14 +23,14 @@ function App() {
 
 const Main = () => {
   const { theme, toggleTheme } = useTheme();
-  const { getToken } = useAuth()
+
+
+
 
   useEffect(() => {
-    // Set the body class based on the theme
     document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
-    getToken()
 
-  }, [theme, getToken]);
+  }, [theme]);
 
   return (
     <Router>

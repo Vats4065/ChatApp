@@ -36,11 +36,6 @@
   justify-content: center;
 }
 
-.emoji-button:hover,
-.attachment-button:hover {
-  background-color: rgba(0, 123, 255, 0.1); /* Light blue background on hover */
-}
-
 .selected-file {
   margin-left: 10px; /* Space between file name and buttons */
   color: #555; /* Gray color for the selected file name */

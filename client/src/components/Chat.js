@@ -28,6 +28,7 @@ const ChatPage = ({ id }) => {
                     },
                 });
                 setMessages(response.data);
+                console.log(response);
             } catch (err) {
                 console.error('Failed to load messages:', err);
                 setError('Failed to load messages.');
@@ -96,7 +97,7 @@ const ChatPage = ({ id }) => {
             recipient: recipientId,
             sender: user.userId,
             seen: false,
-            createdAt: new Date().toISOString(), // Use ISO format
+            createdAt: new Date().toISOString(),
         };
 
         // Optimistically update the UI
@@ -118,7 +119,7 @@ const ChatPage = ({ id }) => {
     };
 
     return (
-        <Container className="chat-container">
+        <Container className="chat-container ">
             {error && <Alert variant="danger">{error}</Alert>}
             <div className="user-list">
                 <h5 className='text-dark'>

@@ -110,6 +110,7 @@ const UsersPage = () => {
               key={otherUser._id}
               action
               onClick={() => handleUserClick(otherUser._id)}
+              className="mb-3 border rounded"
             >
               {otherUser.username}
               {unreadMessages[otherUser._id] > 0 && (
@@ -128,7 +129,7 @@ const UsersPage = () => {
                   </Badge>
                   {otherUser.lastSeen && (
                     <span className="ms-2 text-muted">
-                      Last seen {getLastSeen(otherUser.lastSeen)}
+                      Active {getLastSeen(otherUser.lastSeen)}
                     </span>
                   )}
                 </>

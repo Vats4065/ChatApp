@@ -69,7 +69,7 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 onChange={(e) => setMessage(e.target.value)}
                 className="message-input"
             />
-            <Button className="attachment-button" variant="light" onClick={() => document.getElementById('fileInput').click()}>
+            <Button className="attachment-button me-2" variant="secondary" onClick={() => document.getElementById('fileInput').click()}>
                 <BsPaperclip />
             </Button>
             <input

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Function to save the token to local storage
 export const saveToken = (token) => {
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token,);
 };
 
 // Function to retrieve the token from local storage

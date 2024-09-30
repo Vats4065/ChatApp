@@ -13,10 +13,3 @@ body.dark {
   max-width: 400px;
   margin: auto;
 }
-
-.chat-window {
-  height: 400px;
-  border: 1px solid #ccc;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}

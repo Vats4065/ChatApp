@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,9 +17,10 @@ const Navigation = ({ theme, toggleTheme }) => {
         );
       } catch (error) {
         console.error("Error fetching user info:", error);
-        // Optionally handle error (e.g., show a notification)
       }
     };
+
+    getUserInfo();
   }, []);
 
   const handleLogout = async () => {
