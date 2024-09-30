@@ -25,8 +25,6 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 seen: false,
             };
 
-
-
             const postmessages = await axios.post(`http://localhost:8080/api/chat/message`, msgData,
                 {
                     headers: {
@@ -35,9 +33,6 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                     },
                 }
             )
-
-            console.log(postmessages);
-
             onSendMessage(msgData);
             setMessage('');
             setSelectedFile(null);
