@@ -25,6 +25,7 @@
 
 .emoji-button,
 .attachment-button,
+.goBack,
 .send-button {
   border: none; /* No border */
   transition: background-color 0.3s; /* Smooth transition for hover effects */

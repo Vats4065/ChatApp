@@ -74,7 +74,6 @@ const UsersPage = () => {
 
   const handleUserClick = (recipientId) => {
     navigate(`/chat/${recipientId}`);
-    // Reset unread messages for the clicked user
     setUnreadMessages((prev) => ({
       ...prev,
       [recipientId]: 0,
@@ -101,7 +100,7 @@ const UsersPage = () => {
   return (
     <Container className="mt-4">
       <h2>All Users</h2>
-      {isLoggedIn && <h4>User is logged in</h4>}{" "}
+
       {/* Display if user is logged in */}
       <ListGroup>
         {users.length > 0 ? (

@@ -12,6 +12,8 @@ import PrivateRoute from './components/PrivateRoute';
 import './App.css'; // Import the CSS file
 import UsersPage from './components/UserPages';
 import { useAuth } from './utils/auth';
+import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { IoArrowBackCircle, IoArrowForwardCircle, IoArrowForwardCircleSharp } from 'react-icons/io5';
 
 function App() {
   return (
@@ -24,7 +26,13 @@ function App() {
 const Main = () => {
   const { theme, toggleTheme } = useTheme();
 
+  const handleGoback = () => {
+    window.history.back();
+  }
 
+  const handleGoFormward = () => {
+    window.history.forward();
+  }
 
 
   useEffect(() => {
@@ -36,6 +44,33 @@ const Main = () => {
     <Router>
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <div className={theme === 'dark' ? 'dark-theme' : 'light-theme'}>
+        <Container className='mb-2'>
+          <div className='row'>
+
+            <Button className='goBack me-3' onClick={handleGoback} type="submit" variant='secondary'>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip id="tooltip-go-back">Go Back</Tooltip>} // Tooltip content
+              >
+                <div>
+                  <IoArrowBackCircle />
+                </div>
+              </OverlayTrigger>
+            </Button>
+
+            <Button className='goBack' onClick={handleGoFormward} type="submit" variant='secondary'>
+              <OverlayTrigger
+                placement="top" // Position of the tooltip
+                overlay={<Tooltip id="tooltip-go-forward">Go Forward</Tooltip>} // Tooltip content
+              >
+                <div>
+                  <IoArrowForwardCircle />
+                </div>
+              </OverlayTrigger>
+            </Button>
+
+          </div>
+        </Container>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginForm />} />

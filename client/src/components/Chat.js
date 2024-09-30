@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Alert } from 'react-bootstrap';
+import { Container, Alert, Button } from 'react-bootstrap';
 import { useAuth } from '../utils/auth';
 import io from 'socket.io-client';
 import MessageInput from './MessageInput';
 import './Chat.css';
 import axios from 'axios';
 import { format } from 'date-fns-tz';
+import { IoArrowBackCircle } from "react-icons/io5";
 
 const ChatPage = ({ id }) => {
     const [messages, setMessages] = useState([]);
@@ -118,8 +119,11 @@ const ChatPage = ({ id }) => {
         setMessages([]);
     };
 
+
+
     return (
         <Container className="chat-container ">
+
             {error && <Alert variant="danger">{error}</Alert>}
             <div className="user-list">
                 <h5 className='text-dark'>
