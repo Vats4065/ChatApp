@@ -1,4 +1,3 @@
-// src/utils/auth.js
 import { useState, useEffect } from 'react';
 
 // Function to save the token to local storage
@@ -29,8 +28,8 @@ export const getUserInfo = () => {
 
     // Decode the token (assuming it's a JWT)
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload; // Return the decoded payload
+        const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+        return payload; // Return decoded payload as user info
     } catch (error) {
         console.error('Invalid token:', error);
         return null;
@@ -39,34 +38,37 @@ export const getUserInfo = () => {
 
 // Custom hook for authentication
 export const useAuth = () => {
-    const [user, setUser] = useState(getUserInfo());
+    const [user, setUser] = useState(getUserInfo()); // Initialize user state from token
 
     useEffect(() => {
         const token = getToken();
         if (token) {
-            setUser(getUserInfo());
+            setUser(getUserInfo()); // Set user from token if present
         } else {
-            setUser(null);
+            setUser(null); // No token means no user is logged in
         }
     }, []);
 
+    // Function to log in a user
     const login = (token) => {
-        saveToken(token);
-        setUser(getUserInfo());
+        saveToken(token); // Save the token in local storage
+        setUser(getUserInfo()); // Set the decoded user information in state
     };
 
+    // Function to log out a user
     const logout = () => {
-        removeToken();
-        setUser(null);
+        removeToken(); // Remove the token from local storage
+        setUser(null); // Clear the user information from state
     };
 
     return {
-        user,
-        isAuthenticated: !!user,
-        login,
-        logout,
+        user, // The user object or null if not logged in
+        isAuthenticated: !!user, // Boolean flag for authentication status
+        login, // Function to log in
+        logout, // Function to log out
+        getToken // Expose the getToken function if needed
     };
 };
 
-// Export isAuthenticated for use in PrivateRoute
+// Function to check if the user is authenticated for private routes
 export const isAuthenticated = () => !!getToken();

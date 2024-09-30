@@ -3,11 +3,10 @@ const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    content: { type: String, default: '' },
+    content: { type: String, required: true },
     mediaUrl: { type: String, default: '' },
-    createdAt: { type: Date, default: Date.now },
-});
+    emojis: { type: [String], default: [] }, // If you want to store emojis separately
+    seen: { type: Boolean, default: false },
+}, { timestamps: true });
 
-const Message = mongoose.model('Message', messageSchema);
-
-module.exports = Message;
+module.exports = mongoose.model('Message', messageSchema);

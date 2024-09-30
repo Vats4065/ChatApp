@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider, useTheme } from './context/ThemeContext'; // Ensure this path is correct
@@ -9,6 +9,9 @@ import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
+import './App.css'; // Import the CSS file
+import UsersPage from './components/UserPages';
+import { useAuth } from './utils/auth';
 
 function App() {
   return (
@@ -18,25 +21,34 @@ function App() {
   );
 }
 
-// Create a separate Main component to utilize the Theme context
 const Main = () => {
   const { theme, toggleTheme } = useTheme();
+  const { getToken } = useAuth()
+
+  useEffect(() => {
+    // Set the body class based on the theme
+    document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
+    getToken()
+
+  }, [theme, getToken]);
 
   return (
-    <div className={theme}>
-      <Router>
-        <Navbar theme={theme} toggleTheme={toggleTheme} />
+    <Router>
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <div className={theme === 'dark' ? 'dark-theme' : 'light-theme'}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/chat" element={<PrivateRoute />}>
+          <Route element={<PrivateRoute />}>
+            <Route path="/users" element={<UsersPage />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:recipientId" element={<ChatPage />} />
           </Route>
         </Routes>
-      </Router>
+      </div>
       <ToastContainer />
-    </div>
+    </Router>
   );
 };
 

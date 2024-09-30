@@ -4,6 +4,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/auth"; // Import the useAuth hook
+import { useTheme } from "../../context/ThemeContext"; // Import ThemeContext
 import "./auth.css";
 
 const LoginForm = () => {
@@ -11,6 +12,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth(); // Destructure login from useAuth
+  const { theme } = useTheme(); // Destructure theme from ThemeContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +24,9 @@ const LoginForm = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        login(data.token);
+        login(data.token); // Store token and update user info
         toast.success("Logged in successfully!");
-        navigate("/chat");
+        navigate("/"); // Redirect to homepage after login
       } else {
         toast.error(data.error);
       }
@@ -34,7 +36,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Container className="auth-container">
+    <Container className={`auth-container login-bg ${theme}-theme`}>
       <h2>Login</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formEmail">

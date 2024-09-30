@@ -1,0 +1,62 @@
+/* src/components/MessageInput.css */
+
+.message-input-form {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ccc; /* Light border for separation */
+  background-color: #fff; /* White background for the input area */
+  position: relative; /* Positioning context for the emoji picker */
+}
+
+.message-input {
+  flex-grow: 1;
+  border: 1px solid #ccc; /* Border for the input field */
+  border-radius: 20px; /* Rounded corners for a softer look */
+  padding: 10px; /* Padding inside the input */
+  margin: 0 10px; /* Margin around the input field */
+  transition: border-color 0.3s; /* Transition effect for border color */
+}
+
+.message-input:focus {
+  border-color: #007bff; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+.emoji-button,
+.attachment-button,
+.send-button {
+  background: transparent; /* Transparent background */
+  border: none; /* No border */
+  transition: background-color 0.3s; /* Smooth transition for hover effects */
+  border-radius: 50%; /* Round buttons */
+  width: 40px; /* Fixed width for buttons */
+  height: 40px; /* Fixed height for buttons */
+  display: flex; /* Center icon vertically and horizontally */
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-button:hover,
+.attachment-button:hover,
+.send-button:hover {
+  background-color: rgba(0, 123, 255, 0.1); /* Light blue background on hover */
+}
+
+.selected-file {
+  margin-left: 10px; /* Space between file name and buttons */
+  color: #555; /* Gray color for the selected file name */
+}
+
+.emoji-picker {
+  position: absolute; /* Position the emoji picker */
+  bottom: 60px; /* Adjust position to show above the input */
+  left: 10px; /* Align to the left of the container */
+  right: 10px; /* Full width minus margins */
+  z-index: 1000; /* Ensure it appears above other elements */
+  background-color: #fff; /* White background for the emoji picker */
+  border: 1px solid #ccc; /* Light border for the emoji picker */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 100%;
+}

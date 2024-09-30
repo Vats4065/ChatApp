@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext"; // Import ThemeContext
 import "./auth.css";
 
 const RegisterForm = () => {
@@ -10,6 +11,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
+  const { theme } = useTheme(); // Destructure theme from ThemeContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container className="auth-container">
+    <Container className={`auth-container register-bg ${theme}-theme`}>
       <h2 className="text-center">Register</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formUsername">

@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, "secret-key", { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
         res.status(500).json({ error: 'Login failed' });
@@ -32,10 +32,23 @@ exports.login = async (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
+    const { userId } = req.params
+
+
     try {
-        const user = await User.findById(req.user.userId).select('-password');
+        const user = await User.findById(userId).select("-password")
+
         res.json(user);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch user information' });
     }
 };
+
+exports.getAllUser = async (req, res) => {
+    try {
+        const users = await User.find()
+        return res.json({ users }).status(200)
+    } catch (error) {
+        return res.status(500).json({ error })
+    }
+}

@@ -1,23 +1,102 @@
 /* src/components/auth/auth.css */
+
+/* Import Google Font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
 .auth-container {
   max-width: 400px; /* Limit the width of the container */
   margin: auto; /* Center the container */
   padding: 2rem; /* Add padding */
   border-radius: 0.5rem; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  background-color: #ffffff; /* White background */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* White background with transparency */
+  background-size: cover; /* Cover the entire container */
+  background-position: center; /* Center the background image */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  position: relative; /* Position relative for pseudo-elements */
+  overflow: hidden; /* Hide overflow for pseudo-elements */
+  font-family: "Poppins", sans-serif; /* Set the font family */
+  z-index: 1; /* Ensure container is above overlay */
+}
+
+.auth-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Dark overlay */
+  opacity: 0; /* Start with overlay hidden */
+  transition: opacity 0.3s ease; /* Transition for overlay */
+  z-index: 0; /* Ensure it’s below other elements */
+  pointer-events: none; /* Prevent it from blocking clicks */
+}
+
+.auth-container:hover::before {
+  opacity: 1; /* Show overlay on hover */
 }
 
 .auth-container h2 {
   margin-bottom: 1.5rem; /* Space between title and form */
+  text-align: center; /* Center the title */
+  color: #fff; /* Light title color for better contrast */
+  z-index: 1; /* Ensure title is above the overlay */
+  position: relative; /* Ensure title is above the overlay */
 }
 
+.auth-container .form-control {
+  border-radius: 0.25rem; /* Rounded input fields */
+  transition: border-color 0.2s; /* Smooth transition for input focus */
+  font-size: 1rem; /* Larger text for accessibility */
+  position: relative; /* Ensure input fields are above the overlay */
+  z-index: 1; /* Ensure input fields are above the overlay */
+}
+
+.auth-container .form-control:focus {
+  border-color: #007bff; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add glow effect on focus */
+  z-index: 0;
+}
+
+.auth-container .btn-primary {
+  background-color: #007bff; /* Primary button color */
+  border-color: #007bff; /* Border color */
+  border-radius: 0.25rem; /* Rounded button */
+  z-index: 1;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+}
+
+.auth-container .btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.5); /* Add shadow on hover */
+  z-index: 0;
+}
+
+.auth-container .btn-primary:focus {
+  outline: none; /* Remove focus outline */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add glow effect on focus */
+  z-index: 0;
+}
+
+/* Responsive styles */
 @media (max-width: 576px) {
   .auth-container {
     padding: 1rem; /* Less padding on smaller screens */
   }
+}
 
-  .auth-container h2 {
-    font-size: 1.5rem; /* Smaller font size on small screens */
-  }
+/* Specific background images for each form */
+.login-bg {
+  background-image: url("https://plus.unsplash.com/premium_photo-1684761778770-8a6e01c351e6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); /* Set your login background image */
+}
+
+.register-bg {
+  background-image: url("https://plus.unsplash.com/premium_photo-1681488060968-ee7b2f6d8751?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGNoYXR8ZW58MHx8MHx8fDA%3D");
 }
