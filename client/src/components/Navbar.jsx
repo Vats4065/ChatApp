@@ -1,17 +1,39 @@
 // src/components/Navbar.js
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { BsSun, BsMoon } from "react-icons/bs";
 import { useAuth } from "../utils/auth";
+import axios from "axios";
 
 const Navigation = ({ theme, toggleTheme }) => {
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/auth/me/${user?.userId}`
+        );
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        // Optionally handle error (e.g., show a notification)
+      }
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
+
+      // Proceed with logout
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Error while logging out:", error);
+      // Optionally handle error (e.g., show a notification)
+    }
   };
 
   return (
@@ -34,9 +56,6 @@ const Navigation = ({ theme, toggleTheme }) => {
         <Navbar.Collapse id="basic-navbar-nav">
           {isAuthenticated && (
             <Nav className="ml-auto">
-              {/* <Nav.Link as={Link} to="/chat">
-                Chat
-              </Nav.Link> */}
               <Nav.Link as={Link} to="/users">
                 Users
               </Nav.Link>

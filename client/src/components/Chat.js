@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Alert } from 'react-bootstrap';
 import { useAuth } from '../utils/auth';
 import io from 'socket.io-client';
 import MessageInput from './MessageInput';
 import './Chat.css';
 import axios from 'axios';
+import { format } from 'date-fns-tz';
 
 const ChatPage = ({ id }) => {
-    const [messages, setMessages] = useState([]); // Use a single messages array
+    const [messages, setMessages] = useState([]);
     const [error, setError] = useState(null);
     const [recipientId, setRecipientId] = useState(id);
     const [recipientUser, setRecipientUser] = useState();
     const { user } = useAuth();
     const [socket, setSocket] = useState(null);
+    const chatWindowRef = useRef(null);
 
-    // Fetch messages from the server
     useEffect(() => {
         const fetchMessages = async () => {
             if (!recipientId || !user?.userId) return;
@@ -36,7 +37,6 @@ const ChatPage = ({ id }) => {
         fetchMessages();
     }, [recipientId, user?.userId]);
 
-    // Fetch recipient user information
     useEffect(() => {
         const getUserInfo = async () => {
             try {
@@ -53,16 +53,19 @@ const ChatPage = ({ id }) => {
         const newSocket = io.connect('http://localhost:8080', {
             query: { userId: user.userId },
         });
-
-
         setSocket(newSocket);
 
-        // Listen for incoming messages
         newSocket.on('message', (msg) => {
-            setMessages((prev) => [...prev, msg]);
+            if (msg.sender !== user.userId) {
+                setMessages((prev) => {
+                    if (!prev.find(existingMsg => existingMsg._id === msg._id)) {
+                        return [...prev, msg];
+                    }
+                    return prev; // Avoid adding duplicate message
+                });
+            }
         });
 
-        // Listen for message seen updates
         newSocket.on('message-seen', ({ messageId }) => {
             setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
@@ -76,7 +79,12 @@ const ChatPage = ({ id }) => {
         };
     }, [user.userId, recipientId]);
 
-    // Handle sending messages
+    useEffect(() => {
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     const handleSendMessage = (msgData) => {
         if (!msgData.content || !recipientId) {
             setError('Message and recipient cannot be empty');
@@ -88,6 +96,7 @@ const ChatPage = ({ id }) => {
             recipient: recipientId,
             sender: user.userId,
             seen: false,
+            createdAt: new Date().toISOString(), // Use ISO format
         };
 
         // Optimistically update the UI
@@ -98,33 +107,38 @@ const ChatPage = ({ id }) => {
             if (response.error) {
                 setError(response.error);
             } else {
-                // Emit event to mark message as seen for the recipient
                 socket.emit('seen-message', { messageId: msg._id, recipient: recipientId });
             }
         });
     };
 
-    // Handle user selection
     const handleUserSelect = (id) => {
         setRecipientId(id);
-        setMessages([]); // Clear messages when user changes
+        setMessages([]);
     };
 
     return (
         <Container className="chat-container">
             {error && <Alert variant="danger">{error}</Alert>}
             <div className="user-list">
-                <h5>Chatting with: {recipientUser?.username}</h5>
+                <h5 className='text-dark'>
+                    Chatting with: {recipientUser?.username}
+                </h5>
             </div>
-            <div className="chat-window">
-                {messages.map((msg, index) => (
-                    <div key={index} className={msg.sender === user.userId ? 'my-message' : 'other-message'}>
+            <div className="chat-window" ref={chatWindowRef}>
+                {messages.map((msg) => (
+                    <div key={msg._id} className={msg.sender === user.userId ? 'my-message' : 'other-message'}>
                         <div className={msg.sender === user.userId ? 'message-sender' : 'message-receiver'}>
                             <span>{msg.content}</span>
                             {msg.mediaUrl && <img src={msg.mediaUrl} alt="attached" className="message-media" />}
                             <span className="seen-status">
                                 {msg.seen ? '✓✓' : '✓'}
                             </span>
+
+                            <div className={`message-timestamp ${msg.sender === user.userId ? "text-light" : ""}`}>
+                                {/* Format the timestamp */}
+                                {msg.createdAt ? format(new Date(msg.createdAt), 'hh:mm a') : 'N/A'}
+                            </div>
                         </div>
                     </div>
                 ))}

@@ -26,7 +26,6 @@
 .emoji-button,
 .attachment-button,
 .send-button {
-  background: transparent; /* Transparent background */
   border: none; /* No border */
   transition: background-color 0.3s; /* Smooth transition for hover effects */
   border-radius: 50%; /* Round buttons */
@@ -38,8 +37,7 @@
 }
 
 .emoji-button:hover,
-.attachment-button:hover,
-.send-button:hover {
+.attachment-button:hover {
   background-color: rgba(0, 123, 255, 0.1); /* Light blue background on hover */
 }
 

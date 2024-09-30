@@ -21,7 +21,6 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 sender: userId,
                 recipient: recipientId,
                 content: message,
-                timestamp: new Date(),
                 media: selectedFile ? `/uploads/${selectedFile}` : null,
                 seen: false,
             };
@@ -85,7 +84,7 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 onChange={handleFileChange}
             />
             {selectedFile && <span className="selected-file">{selectedFile}</span>}
-            <Button className="send-button" variant="primary" type="submit">
+            <Button className="send-button" type="submit" variant='secondary'>
                 <BsSend />
             </Button>
         </Form>

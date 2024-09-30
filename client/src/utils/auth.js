@@ -59,6 +59,7 @@ export const useAuth = () => {
     const logout = () => {
         removeToken(); // Remove the token from local storage
         setUser(null); // Clear the user information from state
+
     };
 
     return {

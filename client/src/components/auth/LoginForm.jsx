@@ -26,6 +26,7 @@ const LoginForm = () => {
       if (response.ok) {
         login(data.token); // Store token and update user info
         toast.success("Logged in successfully!");
+        window.location.reload();
         navigate("/"); // Redirect to homepage after login
       } else {
         toast.error(data.error);

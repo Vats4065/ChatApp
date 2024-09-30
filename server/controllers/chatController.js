@@ -2,17 +2,18 @@ const multer = require('multer');
 const path = require('path');
 const Message = require('../models/Message');
 
-// Configure multer for media uploads
+// Configure multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
     filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 
+// Initialize multer
 exports.upload = multer({ storage });
 
+// Send a new message
 exports.sendMessage = async (req, res) => {
     const { content, recipient } = req.body;
-
 
     if (!req.user.userId || !recipient) {
         return res.status(400).json({ error: 'Sender or recipient ID is missing.' });
@@ -33,38 +34,31 @@ exports.sendMessage = async (req, res) => {
 
         res.status(201).json(newMessage);
     } catch (error) {
-        console.error(error); // Log the error for debugging
+        console.error(error);
         res.status(500).json({ error: 'Failed to send message' });
     }
 };
 
+// Get messages between two users
 exports.getMessages = async (req, res) => {
-
     const { recipient } = req.params;
-    const { currentUser } = req.body
-
-
-
-
 
     try {
         const messages = await Message.find({
             $or: [
-                { sender: currentUser, recipient },
+                { sender: req.user.userId, recipient },
                 { sender: recipient, recipient: req.user.userId }
             ]
         }).sort({ createdAt: 1 });
 
-        console.log(messages);
-
         res.json(messages);
     } catch (error) {
-        console.error(error); // Log the error for debugging
+        console.error(error);
         res.status(500).json({ error: 'Failed to fetch messages' });
     }
 };
 
-
+// Handle typing notification
 exports.handleTyping = (req, res) => {
     const { recipient } = req.body;
 
@@ -81,7 +75,7 @@ exports.handleTyping = (req, res) => {
     res.status(200).json({ message: 'Typing event emitted' });
 };
 
-
+// Mark a message as seen
 exports.handleMessageSeen = async (req, res) => {
     const { messageId, recipient } = req.body;
 
@@ -98,7 +92,7 @@ exports.handleMessageSeen = async (req, res) => {
         req.app.get('io').emit('message-seen', {
             messageId,
             recipient,
-            seenBy: message.sender, // Sender of the message
+            seenBy: message.sender,
         });
 
         res.status(200).json({ message: 'Message marked as seen' });
