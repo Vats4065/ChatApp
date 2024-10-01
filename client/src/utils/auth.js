@@ -1,29 +1,61 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 // Function to save the token to local storage
+// Function to save the token to local storage with an expiration time
 export const saveToken = (token) => {
-    localStorage.setItem('token', token,);
+    const now = new Date().getTime();
+    const expiryTime = now + 3600000; // 1 hour in milliseconds
+    localStorage.setItem('token', token);
+    localStorage.setItem('tokenExpiry', expiryTime); // Store the expiration time
 };
 
-// Function to retrieve the token from local storage
-export const getToken = () => {
-    return localStorage.getItem('token');
+export const handleLogout = async (user) => {
+
+    try {
+        const res = await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
+
+        console.log(res)
+    } catch (error) {
+        console.error("Error while logging out:", error);
+    }
+};
+
+// Function to retrieve the token from local storage and check if it's expired
+export const getToken = (user) => {
+    const token = localStorage.getItem('token');
+    const expiryTime = localStorage.getItem('tokenExpiry');
+    const now = new Date().getTime();
+
+    if (expiryTime && now > expiryTime) {
+        // If the current time is past the expiry time, remove the token and return null
+
+        removeToken();
+        handleLogout(user);
+
+        return null;
+    }
+
+    return token;
 };
 
 // Function to remove the token from local storage (logout)
 export const removeToken = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiry'); // Also remove the expiration time
 };
+
 
 // Function to check if the user is logged in
 export const isLoggedIn = () => {
     const token = getToken();
+    console.log(token);
     return !!token; // Returns true if token exists, false otherwise
 };
 
 // Function to decode the token and get user info
-export const getUserInfo = () => {
-    const token = getToken();
+export const getUserInfo = (user) => {
+    const token = getToken(user);
     if (!token) return null;
 
     // Decode the token (assuming it's a JWT)
@@ -43,7 +75,7 @@ export const useAuth = () => {
     useEffect(() => {
         const token = getToken();
         if (token) {
-            setUser(getUserInfo()); // Set user from token if present
+            setUser(getUserInfo(user)); // Set user from token if present
         } else {
             setUser(null); // No token means no user is logged in
         }

@@ -28,6 +28,7 @@ const LoginForm = () => {
         toast.success("Logged in successfully!");
 
         navigate("/"); // Redirect to homepage after login
+        window.location.reload();
       } else {
         toast.error(data.error);
       }

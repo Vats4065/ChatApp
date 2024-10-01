@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const User = require('./models/User');
 const Message = require('./models/Message');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -17,26 +18,35 @@ const io = socketIo(server, {
 
 app.set('io', io);
 
+// Keep track of online users
 let onlineUsers = {};
 
 io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
+
     if (userId) {
-        onlineUsers[userId] = socket.id;
+        onlineUsers[userId] = socket.id;  // Add user to online users list
+        console.log(`User ${userId} connected with socket ID ${socket.id}`);
     }
 
+    // Emit the list of currently online users
     io.emit('update-online-users', Object.keys(onlineUsers));
 
+    // Handle user disconnect
     socket.on('disconnect', () => {
-        delete onlineUsers[userId];
+        if (userId) {
+            delete onlineUsers[userId];  // Remove user from online users list
+            console.log(`User ${userId} disconnected`);
+        }
         io.emit('update-online-users', Object.keys(onlineUsers));
     });
 
+    // Handle message sending
     socket.on('send-message', async (msgData, callback) => {
         try {
             const { recipient, sender, content } = msgData;
 
-
+            // Save the message to the database
             const message = new Message({
                 sender,
                 recipient,
@@ -45,7 +55,7 @@ io.on('connection', (socket) => {
             });
             await message.save();
 
-
+            // If the recipient is online, send them the message in real-time
             if (onlineUsers[recipient]) {
                 io.to(onlineUsers[recipient]).emit('message', {
                     sender,
@@ -56,6 +66,7 @@ io.on('connection', (socket) => {
                 });
             }
 
+            // Confirm that the message has been sent
             callback({ success: true, messageId: message._id });
         } catch (error) {
             console.error("Error sending message:", error);
@@ -63,18 +74,20 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Handle typing event
     socket.on('typing', ({ recipient }) => {
         if (onlineUsers[recipient]) {
             io.to(onlineUsers[recipient]).emit('typing', { userId, typing: true });
         }
     });
 
+    // Handle message seen event
     socket.on('seen-message', async ({ messageId, recipient }) => {
         try {
-
+            // Mark the message as seen in the database
             await Message.updateOne({ _id: messageId }, { $set: { seen: true } });
 
-
+            // Notify the sender that the message has been seen
             if (onlineUsers[recipient]) {
                 io.to(onlineUsers[recipient]).emit('message-seen', { messageId });
             }
@@ -83,20 +96,23 @@ io.on('connection', (socket) => {
         }
     });
 
-
+    // Handle joining a room (for group chats, for example)
     socket.on('join-room', ({ roomId }) => {
         socket.join(roomId);
     });
 
+    // Handle leaving a room
     socket.on('leave-room', ({ roomId }) => {
         socket.leave(roomId);
     });
 });
 
+// Middleware setup
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Database connection
 connectDB();
 
 // Routes

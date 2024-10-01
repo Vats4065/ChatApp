@@ -3,17 +3,17 @@ const path = require('path');
 const Message = require('../models/Message');
 
 // Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-});
 
-// Initialize multer
-exports.upload = multer({ storage });
 
 // Send a new message
 exports.sendMessage = async (req, res) => {
     const { content, recipient } = req.body;
+    let mediaUrl = null;
+
+    // Check if a file is uploaded
+    if (req.file) {
+        mediaUrl = `/uploads/${req.file.filename}`; // Set the file URL based on the uploaded file
+    }
 
     if (!req.user.userId || !recipient) {
         return res.status(400).json({ error: 'Sender or recipient ID is missing.' });
@@ -24,7 +24,7 @@ exports.sendMessage = async (req, res) => {
             sender: req.user.userId,
             recipient,
             content,
-            mediaUrl: req.file ? `/uploads/${req.file.filename}` : '',
+            mediaUrl, // Save media URL if any
         });
 
         await newMessage.save();
@@ -38,7 +38,6 @@ exports.sendMessage = async (req, res) => {
         res.status(500).json({ error: 'Failed to send message' });
     }
 };
-
 // Get messages between two users
 exports.getMessages = async (req, res) => {
     const { recipient } = req.params;

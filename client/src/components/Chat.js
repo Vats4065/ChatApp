@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Alert, Button } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
 import { useAuth } from '../utils/auth';
 import io from 'socket.io-client';
 import MessageInput from './MessageInput';
 import './Chat.css';
 import axios from 'axios';
 import { format } from 'date-fns-tz';
-import { IoArrowBackCircle } from "react-icons/io5";
 
 const ChatPage = ({ id }) => {
     const [messages, setMessages] = useState([]);
@@ -15,6 +14,7 @@ const ChatPage = ({ id }) => {
     const [recipientUser, setRecipientUser] = useState();
     const { user } = useAuth();
     const [socket, setSocket] = useState(null);
+    const [isTyping, setIsTyping] = useState(false);  // Track typing status
     const chatWindowRef = useRef(null);
 
     useEffect(() => {
@@ -57,6 +57,7 @@ const ChatPage = ({ id }) => {
         });
         setSocket(newSocket);
 
+        // Listen for incoming messages
         newSocket.on('message', (msg) => {
             if (msg.sender !== user.userId) {
                 setMessages((prev) => {
@@ -68,12 +69,20 @@ const ChatPage = ({ id }) => {
             }
         });
 
+        // Listen for seen message updates
         newSocket.on('message-seen', ({ messageId }) => {
             setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
                     msg._id === messageId ? { ...msg, seen: true } : msg
                 )
             );
+        });
+
+        // Listen for typing event
+        newSocket.on('typing', ({ userId, typing }) => {
+            if (userId === recipientId) {
+                setIsTyping(typing);  // Set typing status
+            }
         });
 
         return () => {
@@ -88,11 +97,6 @@ const ChatPage = ({ id }) => {
     }, [messages]);
 
     const handleSendMessage = (msgData) => {
-        if (!msgData.content || !recipientId) {
-            setError('Message and recipient cannot be empty');
-            return;
-        }
-
         const msg = {
             ...msgData,
             recipient: recipientId,
@@ -101,10 +105,8 @@ const ChatPage = ({ id }) => {
             createdAt: new Date().toISOString(),
         };
 
-        // Optimistically update the UI
         setMessages((prevMessages) => [...prevMessages, msg]);
 
-        // Emit the message to the server
         socket.emit('send-message', msg, (response) => {
             if (response.error) {
                 setError(response.error);
@@ -119,29 +121,31 @@ const ChatPage = ({ id }) => {
         setMessages([]);
     };
 
+    const handleTyping = () => {
+        socket.emit('typing', { recipient: recipientId });
+    };
 
+    console.log(messages);
 
     return (
-        <Container className="chat-container ">
-
+        <Container className="chat-container">
             {error && <Alert variant="danger">{error}</Alert>}
             <div className="user-list">
-                <h5 className='text-dark'>
-                    Chatting with: {recipientUser?.username}
-                </h5>
+                <h5 className="text-dark">Chatting with: {recipientUser?.username}</h5>
+                {isTyping && <p>{recipientUser?.username} is typing...</p>}
             </div>
             <div className="chat-window" ref={chatWindowRef}>
                 {messages.map((msg) => (
                     <div key={msg._id} className={msg.sender === user.userId ? 'my-message' : 'other-message'}>
                         <div className={msg.sender === user.userId ? 'message-sender' : 'message-receiver'}>
                             <span>{msg.content}</span>
-                            {msg.mediaUrl && <img src={msg.mediaUrl} alt="attached" className="message-media" />}
+                            {msg.mediaUrl && (
+                                <img src={`http://localhost:8080${msg.mediaUrl}`} alt="attachment" className="message-media" />
+                            )}
                             <span className="seen-status">
                                 {msg.seen ? '✓✓' : '✓'}
                             </span>
-
                             <div className={`message-timestamp ${msg.sender === user.userId ? "text-light" : ""}`}>
-                                {/* Format the timestamp */}
                                 {msg.createdAt ? format(new Date(msg.createdAt), 'hh:mm a') : 'N/A'}
                             </div>
                         </div>
@@ -153,6 +157,7 @@ const ChatPage = ({ id }) => {
                 userId={user.userId}
                 recipientId={recipientId}
                 onSendMessage={handleSendMessage}
+                onTyping={handleTyping}  // Pass typing handler
             />
         </Container>
     );

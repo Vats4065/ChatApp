@@ -9,20 +9,6 @@ const Navigation = ({ theme, toggleTheme }) => {
   const { logout, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/auth/me/${user?.userId}`
-        );
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    getUserInfo();
-  }, [user]);
-
   const handleLogout = async () => {
     try {
       await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
