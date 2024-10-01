@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema({
     recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String },
     mediaUrl: { type: String, default: '' },
-    emojis: { type: [String], default: [] }, // If you want to store emojis separately
+    emojis: { type: [String], default: [] },
     seen: { type: Boolean, default: false },
 }, { timestamps: true });
 

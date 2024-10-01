@@ -16,10 +16,10 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
 
         if (message.trim() || selectedFile) {
             const formData = new FormData();
-            formData.append('content', message); // Append the message content
-            formData.append('recipient', recipientId); // Append the recipient
+            formData.append('content', message);
+            formData.append('recipient', recipientId);
             if (selectedFile) {
-                formData.append('media', selectedFile); // Append the file
+                formData.append('media', selectedFile);
             }
 
             try {
@@ -34,7 +34,7 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 onSendMessage(response.data);
                 setMessage('');
                 setSelectedFile(null);
-                setEmojiPicker(false); // Close the emoji picker after sending a message
+                setEmojiPicker(false);
             } catch (error) {
                 console.error('Failed to send message:', error);
             }
@@ -44,16 +44,16 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedFile(file); // Store the selected file
+            setSelectedFile(file);
         }
     };
 
-    // Close the emoji picker when clicking outside of it
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             console.log(event.target);
             if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
-                setEmojiPicker(false); // Close the emoji picker
+                setEmojiPicker(false);
             }
         };
 
@@ -69,7 +69,7 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
                 <BsEmojiSmile />
             </Button>
             {emojiPicker && (
-                <div ref={emojiPickerRef} className="emoji-picker"> {/* Attach the ref to the emoji picker */}
+                <div ref={emojiPickerRef} className="emoji-picker">
                     <EmojiPicker
                         onEmojiClick={(event) => {
                             if (event && event.emoji) {

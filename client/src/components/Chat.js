@@ -62,7 +62,7 @@ const ChatPage = ({ id }) => {
                     if (!prev.find(existingMsg => existingMsg._id === msg._id)) {
                         return [...prev, msg];
                     }
-                    return prev; // Avoid adding duplicate message
+                    return prev;
                 });
             }
         });

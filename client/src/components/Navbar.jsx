@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { BsSun, BsMoon, BsPerson } from "react-icons/bs"; // Import the profile icon
+import { BsSun, BsMoon, BsPerson } from "react-icons/bs";
 import { useAuth } from "../utils/auth";
 import axios from "axios";
 
@@ -32,10 +32,8 @@ const Navigation = ({ theme, toggleTheme }) => {
           ChatApp
         </Navbar.Brand>
 
-        {/* Navbar Toggle for responsive menu */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        {/* Navbar Collapse contains the responsive menu links */}
         <Navbar.Collapse id="basic-navbar-nav">
           {isAuthenticated && (
             <Nav className="ml-auto">
@@ -43,11 +41,10 @@ const Navigation = ({ theme, toggleTheme }) => {
                 Users
               </Nav.Link>
               <NavDropdown title="Profile" id="basic-nav-dropdown">
-                {/* Display user details in the dropdown */}
                 <NavDropdown.Item disabled>
                   <div className="d-flex align-items-center">
                     <BsPerson className="me-2" />
-                    {user?.username} {/* Display the username or user name */}
+                    {user?.username}
                   </div>
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/profile">

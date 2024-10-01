@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup, Container, Spinner, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/auth"; // Custom hook for authentication
+import { useAuth } from "../utils/auth";
 import axios from "axios";
 import io from "socket.io-client";
-import { formatDistanceToNow } from "date-fns"; // Import date-fns for time formatting
+import { formatDistanceToNow } from "date-fns";
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [, setIsLoggedIn] = useState(false);
-  const [unreadMessages, setUnreadMessages] = useState({}); // Track unread messages
-  const { user } = useAuth(); // Get the current authenticated user and login status
+  const [unreadMessages, setUnreadMessages] = useState({});
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // Token for API requests
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (token) {
@@ -25,8 +25,7 @@ const UsersPage = () => {
   }, [token, navigate]);
 
   useEffect(() => {
-    const socket = io.connect("http://localhost:8080"); // Connect to your WebSocket server
-
+    const socket = io.connect("http://localhost:8080");
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
@@ -39,15 +38,13 @@ const UsersPage = () => {
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
-        setLoading(false); // Ensure loading is set to false in both success and error cases
+        setLoading(false);
       }
     };
 
     fetchUsers();
 
-    // Listen for real-time updates on user online status
     socket.on("update-online-users", (data) => {
-      // Find the user whose status changed and update their information
       setUsers((prevUsers) =>
         prevUsers.map((u) =>
           u._id === data.userId
@@ -61,7 +58,7 @@ const UsersPage = () => {
       if (msg.recipient === user.userId) {
         setUnreadMessages((prev) => ({
           ...prev,
-          [msg.sender]: (prev[msg.sender] || 0) + 1, // Increment unread count for sender
+          [msg.sender]: (prev[msg.sender] || 0) + 1,
         }));
       }
     });
@@ -100,7 +97,6 @@ const UsersPage = () => {
     <Container className="mt-4">
       <h2>All Users</h2>
 
-      {/* Display if user is logged in */}
       <ListGroup>
         {users.length > 0 ? (
           users.map((otherUser) => (

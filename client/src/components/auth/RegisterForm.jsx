@@ -1,9 +1,8 @@
-// src/components/auth/RegisterForm.js
 import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext"; // Import ThemeContext
+import { useTheme } from "../../context/ThemeContext";
 import "./auth.css";
 
 const RegisterForm = () => {
@@ -11,7 +10,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
-  const { theme } = useTheme(); // Destructure theme from ThemeContext
+  const { theme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

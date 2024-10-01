@@ -1,18 +1,17 @@
-// src/components/auth/LoginForm.js
 import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../utils/auth"; // Import the useAuth hook
-import { useTheme } from "../../context/ThemeContext"; // Import ThemeContext
+import { useAuth } from "../../utils/auth";
+import { useTheme } from "../../context/ThemeContext";
 import "./auth.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth(); // Destructure login from useAuth
-  const { theme } = useTheme(); // Destructure theme from ThemeContext
+  const { login } = useAuth();
+  const { theme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,10 +23,10 @@ const LoginForm = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        login(data.token); // Store token and update user info
+        login(data.token);
         toast.success("Logged in successfully!");
 
-        navigate("/"); // Redirect to homepage after login
+        navigate("/");
         window.location.reload();
       } else {
         toast.error(data.error);

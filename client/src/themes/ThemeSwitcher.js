@@ -1,4 +1,3 @@
-// src/components/ThemeSwitcher.js
 import React, { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { ThemeContext } from '../context/ThemeContext';
