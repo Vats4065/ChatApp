@@ -11,9 +11,8 @@ import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css'; // Import the CSS file
 import UsersPage from './components/UserPages';
-import { useAuth } from './utils/auth';
 import { Button, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { IoArrowBackCircle, IoArrowForwardCircle, IoArrowForwardCircleSharp } from 'react-icons/io5';
+import { IoArrowBackCircle, IoArrowForwardCircle } from 'react-icons/io5';
 import ProfilePage from './pages/ProfilePages';
 
 function App() {

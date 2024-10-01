@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017/chatApp", {
+        await mongoose.connect("mongodb+srv://valglobalia:vchat@cluster0.apozl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

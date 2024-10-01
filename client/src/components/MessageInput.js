@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { BsEmojiSmile, BsPaperclip, BsSend } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
 import './MessageInput.css';
 import axios from 'axios';
 
-const MessageInput = ({ socket, userId, recipientId, onSendMessage, onTyping }) => {
+const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
     const [message, setMessage] = useState('');
     const [emojiPicker, setEmojiPicker] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const emojiPickerRef = useRef(null);
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -33,6 +34,7 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage, onTyping }) 
                 onSendMessage(response.data);
                 setMessage('');
                 setSelectedFile(null);
+                setEmojiPicker(false); // Close the emoji picker after sending a message
             } catch (error) {
                 console.error('Failed to send message:', error);
             }
@@ -46,10 +48,20 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage, onTyping }) 
         }
     };
 
-    const handleInputChange = (e) => {
-        setMessage(e.target.value);
-        onTyping();  // Emit typing event when input changes
-    };
+    // Close the emoji picker when clicking outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            console.log(event.target);
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+                setEmojiPicker(false); // Close the emoji picker
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <Form onSubmit={handleSendMessage} className="message-input-form">
@@ -57,20 +69,21 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage, onTyping }) 
                 <BsEmojiSmile />
             </Button>
             {emojiPicker && (
-                <EmojiPicker
-                    onEmojiClick={(event, emojiObject) => {
-                        if (emojiObject && emojiObject.emoji) {
-                            setMessage(prev => prev + emojiObject.emoji); // Append selected emoji to message
-                        }
-                    }}
-                    className={`emoji-picker w-75 ${emojiPicker ? 'show' : ''}`}
-                />
+                <div ref={emojiPickerRef} className="emoji-picker"> {/* Attach the ref to the emoji picker */}
+                    <EmojiPicker
+                        onEmojiClick={(event) => {
+                            if (event && event.emoji) {
+                                setMessage(prev => prev + event.emoji);
+                            }
+                        }}
+                    />
+                </div>
             )}
             <Form.Control
                 type="text"
                 placeholder="Type a message..."
                 value={message}
-                onChange={handleInputChange} // Use handleInputChange here
+                onChange={(e) => setMessage(e.target.value)}
                 className="message-input"
             />
             <Button className="attachment-button me-2" variant="secondary" onClick={() => document.getElementById('fileInput').click()}>

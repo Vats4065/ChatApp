@@ -79,7 +79,7 @@ export const useAuth = () => {
         } else {
             setUser(null); // No token means no user is logged in
         }
-    }, []);
+    }, [user]);
 
     // Function to log in a user
     const login = (token) => {

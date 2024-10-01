@@ -8,9 +8,8 @@ import { formatDistanceToNow } from "date-fns"; // Import date-fns for time form
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([]); // Store online users
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [, setIsLoggedIn] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState({}); // Track unread messages
   const { user } = useAuth(); // Get the current authenticated user and login status
   const navigate = useNavigate();

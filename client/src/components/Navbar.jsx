@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { BsSun, BsMoon, BsPerson } from "react-icons/bs"; // Import the profile icon
