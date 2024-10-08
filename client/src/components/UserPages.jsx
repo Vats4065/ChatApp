@@ -25,11 +25,11 @@ const UsersPage = () => {
   }, [token, navigate]);
 
   useEffect(() => {
-    const socket = io.connect("http://localhost:8080");
+    const socket = io.connect("http://localhost:8000");
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/auth/getAllUser"
+          "http://localhost:8000/api/auth/getAllUser"
         );
         const filteredUsers = response.data.users.filter(
           (otherUser) => otherUser._id !== user.userId

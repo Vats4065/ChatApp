@@ -1,0 +1,50 @@
+/* VerifyOtpPage.css */
+
+.verify-otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.verify-otp-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.verify-otp-box h2 {
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.verify-otp-box .form-label {
+  color: #495057;
+}
+
+.verify-otp-box .form-control {
+  border-radius: 5px;
+  height: 40px;
+}
+
+.verify-otp-box .btn {
+  background-color: #007bff;
+  border-color: #007bff;
+  height: 45px;
+  font-size: 16px;
+}
+
+.verified-message {
+  background-color: #28a745;
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 14px;
+}

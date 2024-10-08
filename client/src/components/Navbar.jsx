@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsSun, BsMoon, BsPerson } from "react-icons/bs";
 import { useAuth } from "../utils/auth";
 import axios from "axios";
+import { auth } from "../utils/firebase";
+import { signOut } from "firebase/auth";
 
 const Navigation = ({ theme, toggleTheme }) => {
   const { logout, isAuthenticated, user } = useAuth();
@@ -11,9 +13,17 @@ const Navigation = ({ theme, toggleTheme }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
+      if (user.email) {
+        await signOut(auth);
+        logout();
+      } else {
+        await axios.put(
+          `http://localhost:8000/api/auth/logout/${user?.userId}`
+        );
+      }
       logout();
       navigate("/login");
+      window.location.reload();
     } catch (error) {
       console.error("Error while logging out:", error);
     }

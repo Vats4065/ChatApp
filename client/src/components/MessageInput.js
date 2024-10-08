@@ -23,14 +23,12 @@ const MessageInput = ({ socket, userId, recipientId, onSendMessage }) => {
             }
 
             try {
-                const response = await axios.post('http://localhost:8080/api/chat/message', formData, {
+                const response = await axios.post('http://localhost:8000/api/chat/message', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-
-                // Emit the message
                 onSendMessage(response.data);
                 setMessage('');
                 setSelectedFile(null);

@@ -1,8 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif; /* Apply Poppins font globally */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dark-theme {
@@ -46,4 +46,22 @@ body {
 
 .navbar .dropdown-item.disabled {
   color: #ffffff;
+}
+
+.google-btn {
+  border-radius: 0.25rem;
+  z-index: 1;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.5);
+  z-index: 0;
+}
+
+.google-btn .btn-light:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  z-index: 0;
 }

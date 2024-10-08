@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const saveToken = (token) => {
     const now = new Date().getTime();
@@ -9,7 +9,6 @@ export const saveToken = (token) => {
 };
 
 export const handleLogout = async (user) => {
-
     try {
         const res = await axios.put(`http://localhost:8080/api/auth/logout/${user?.userId}`);
 
@@ -51,8 +50,8 @@ export const isLoggedIn = () => {
 
 
 
-export const getUserInfo = (user) => {
-    const token = getToken(user);
+export const getUserInfo = () => {
+    const token = getToken();
     if (!token) return null;
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
@@ -67,14 +66,14 @@ export const getUserInfo = (user) => {
 
 export const useAuth = () => {
     const [user, setUser] = useState(getUserInfo());
-    useEffect(() => {
-        const token = getToken();
-        if (token) {
-            setUser(getUserInfo(user));
-        } else {
-            setUser(null);
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     const token = getToken();
+    //     if (token) {
+    //         setUser(getUserInfo());
+    //     } else {
+    //         setUser(null);
+    //     }
+    // }, [user]);
 
 
     const login = (token) => {

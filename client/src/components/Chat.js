@@ -21,7 +21,7 @@ const ChatPage = ({ id }) => {
             if (!recipientId || !user?.userId) return;
 
             try {
-                const response = await axios.get(`http://localhost:8080/api/chat/messages/${recipientId}`, {
+                const response = await axios.get(`http://localhost:8000/api/chat/messages/${recipientId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -41,7 +41,7 @@ const ChatPage = ({ id }) => {
     useEffect(() => {
         const getUserInfo = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/auth/me/${recipientId}`);
+                const response = await axios.get(`http://localhost:8000/api/auth/me/${recipientId}`);
                 setRecipientUser(response.data);
             } catch (error) {
                 console.error('Failed to fetch user info', error);
@@ -51,7 +51,7 @@ const ChatPage = ({ id }) => {
 
         getUserInfo();
 
-        const newSocket = io.connect('http://localhost:8080', {
+        const newSocket = io.connect('http://localhost:8000', {
             query: { userId: user.userId },
         });
         setSocket(newSocket);
@@ -133,7 +133,7 @@ const ChatPage = ({ id }) => {
                         <div className={msg.sender === user.userId ? 'message-sender' : 'message-receiver'}>
                             <span>{msg.content}</span>
                             {msg.mediaUrl && (
-                                <img src={`http://localhost:8080${msg.mediaUrl}`} alt="attachment" className="message-media" />
+                                <img src={`http://localhost:8000${msg.mediaUrl}`} alt="attachment" className="message-media" />
                             )}
                             <span className="seen-status">
                                 {msg.seen ? '✓✓' : '✓'}
